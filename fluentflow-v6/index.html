@@ -837,7 +837,7 @@ const COMMON_ERRORS = [
 // ══════════════════════════════════════════════
 let db,auth,currentUser=null,firebaseReady=false;
 
-function initFirebase(){
+function initFirebase(){   const safetyTimer=setTimeout(()=>{hideLoading();showApp(null);},6000);   try{     if(!FIREBASE_CONFIG.apiKey||FIREBASE_CONFIG.apiKey.startsWith('FIREBASE_')){clearTimeout(safetyTimer);hideLoading();showApp(null);return;}     firebase.initializeApp(FIREBASE_CONFIG);     db=firebase.firestore();auth=firebase.auth();firebaseReady=true;     auth.onAuthStateChanged(user=>{clearTimeout(safetyTimer);hideLoading();if(user){currentUser=user;showApp(user);}else{currentUser=null;showAuthScreen();}});   }catch(e){clearTimeout(safetyTimer);console.error(e);hideLoading();showApp(null);} }
   try{
     if(!FIREBASE_CONFIG.apiKey||FIREBASE_CONFIG.apiKey.startsWith('FIREBASE_')){hideLoading();showApp(null);return;}
     firebase.initializeApp(FIREBASE_CONFIG);
@@ -849,7 +849,7 @@ function initFirebase(){
     });
   }catch(e){console.error(e);hideLoading();showApp(null);}
 }
-function hideLoading(){document.getElementById('loading-screen').style.display='none'}
+function hideLoading(){const el=document.getElementById('loading-screen');if(el)el.style.display='none';}
 function showAuthScreen(){document.getElementById('auth-screen').style.display='flex';document.getElementById('app').classList.remove('visible')}
 function showApp(user){
   document.getElementById('auth-screen').style.display='none';
